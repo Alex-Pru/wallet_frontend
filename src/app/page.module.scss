@@ -1,0 +1,72 @@
+.mainContent {
+  width: 100vw;
+  background-color: black;
+  height: 100%;
+  .mainInformationsSection {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(236, 236, 236);
+    border-radius: 0 0 5px 5px;
+    overflow: hidden;
+    .imgContainer {
+      position: relative;
+      width: 300px;
+      height: 150px;
+    }
+    .subtitleSection {
+      text-align: center;
+      width: 100%;
+      b {
+        font-size: x-large;
+        font-weight: bolder;
+        color: rgba(86, 255, 122, 1);
+        text-shadow: 2px 2px black;
+      }
+      article {
+        font-size: large;
+        margin-bottom: 30px;
+      }
+      .linkLogin {
+        padding: 20px;
+        font-weight: bolder;
+        font-size: larger;
+        background-color: black;
+        border: solid 1px rgba(86, 255, 122, 1);
+        border-radius: 20px;
+        color: white;
+        i {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  .footerContainer {
+    width: 100%;
+    height: 50px;
+    color: black;
+    padding-top: 5px;
+    background-color: rgba(86, 255, 122, 1);
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    section {
+      display: flex;
+      position: relative;
+      justify-content: center;
+      div {
+        position: absolute;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        i {
+          font-size: 30px;
+        }
+      }
+    }
+  }
+}

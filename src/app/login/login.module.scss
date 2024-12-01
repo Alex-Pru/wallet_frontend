@@ -1,0 +1,107 @@
+.imgContainer {
+  position: relative;
+  width: 30vw;
+  min-width: 300px;
+  max-width: 400px;
+  height: 20vh;
+  min-height: 150px;
+  max-width: 220px;
+  background-color: transparent;
+}
+
+.errorMessage {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: auto;
+  background-color: rgb(255, 169, 169);
+  border-radius: 1rem;
+  z-index: 9999;
+  padding: 3px;
+}
+
+.mainContent {
+  width: 100vw;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  header {
+    background-color: white;
+    padding: 3px;
+    border-bottom: solid 1px black;
+  }
+}
+
+.loginOptions {
+  padding: 5px;
+  width: 40vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 5px;
+  position: relative;
+  .loginContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 70vh;
+    .defaultLogin {
+      display: flex;
+      justify-content: center;
+      padding-top: 50px;
+      text-align: center;
+      p {
+        color: black;
+        width: 80%;
+        font-size: larger;
+        font-weight: bolder;
+      }
+    }
+    .loginStrategies {
+      position: absolute;
+      bottom: 100px;
+      display: flex;
+      align-items: start;
+      width: 100%;
+      padding: 0 5px 0 5px;
+      button {
+        font-size: 1rem;
+        background-color: transparent;
+        padding: 3px;
+        border-radius: 1rem;
+        cursor: pointer;
+      }
+      .googleStrategy {
+        background-color: red;
+        color: white;
+        border: 2px solid rgb(185, 185, 185);
+        i {
+          margin-left: 5px;
+          color: rgb(202, 0, 0);
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 710px) {
+  .imgContainer {
+    width: 80vw;
+    height: 25vh;
+  }
+
+  .loginOptions {
+    width: 90vw;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+  }
+}

@@ -1,0 +1,18 @@
+// styles/Error.module.scss
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #ff6b6b;
+}
+
+.errorMessage {
+  background-color: #ffeded;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #ff6b6b;
+  color: #ff6b6b;
+  font-weight: bold;
+}

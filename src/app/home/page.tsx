@@ -15,9 +15,15 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Para controlar o menu lateral
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const toggleEditModal = () => {
+    setIsEditModalOpen(!isEditModalOpen);
   };
 
   const router = useRouter();
@@ -63,6 +69,20 @@ export default function Home() {
     setIsSidebarOpen(!isSidebarOpen); // Alterna o estado de visibilidade do Sidebar
   };
 
+  const modifyWallet = (changedWallet: Wallet) => {
+    setWallets((prevWallets) =>
+      prevWallets.map((wallet) =>
+        wallet.id === changedWallet.id
+          ? { ...wallet, ...changedWallet }
+          : wallet
+      )
+    );
+  };
+
+  const handleSubmenuClick = (wallet: Wallet) => {
+    setSelectedWallet(selectedWallet?.id === wallet.id ? null : wallet);
+  };
+
   const addWallet = (newWallet: Wallet) => {
     setWallets((prevWallets) => [...prevWallets, newWallet]);
   };
@@ -93,23 +113,47 @@ export default function Home() {
           <div>Não há carteiras cadastradas.</div>
         ) : (
           <ul>
-            {wallets.map((wallet, index) => (
-              <li
-                id={wallet.id.toString()}
-                key={index}
-                className={style.walletItem}
-              >
+            {wallets.map((wallet) => (
+              <li key={wallet.id} className="walletItem">
                 <b>{wallet.name}</b>
                 <p>{wallet.description}</p>
-                <p>{wallet.created_at}</p>
-                {wallet.updated_at && <p>{wallet.updated_at}</p>}
-                <div className={style.transactionButtons}>
-                  <button onClick={() => handleAddTransaction(wallet.id)}>
+                <p>{wallet.created_at.split("T")[0]}</p>
+                {wallet.updated_at && <p>{wallet.updated_at.split("T")[0]}</p>}
+                <div className="transactionButtons">
+                  <button
+                    onClick={() =>
+                      console.log(`Adicionar gasto na carteira ${wallet.id}`)
+                    }
+                  >
                     Adicionar Gasto
                   </button>
-                  <button onClick={() => handleAddTransaction(wallet.id)}>
+                  <button
+                    onClick={() =>
+                      console.log(
+                        `Adicionar recebimento na carteira ${wallet.id}`
+                      )
+                    }
+                  >
                     Adicionar Recebimento
                   </button>
+                </div>
+                {/* Botão de 3 pontos */}
+                <div className={style.threeDotsMenu}>
+                  <button onClick={() => handleSubmenuClick(wallet)}>
+                    &#x2022;&#x2022;&#x2022; {/* Representa os três pontos */}
+                  </button>
+                  {/* Menu de opções */}
+                  {selectedWallet?.id === wallet.id && (
+                    <div className={style.menu}>
+                      <button onClick={() => toggleEditModal()}>Editar</button>
+                      <button onClick={() => console.log("apagar")}>
+                        Apagar
+                      </button>
+                      <button onClick={() => console.log("sair")}>
+                        Sair da Carteira
+                      </button>
+                    </div>
+                  )}
                 </div>
               </li>
             ))}
@@ -122,7 +166,20 @@ export default function Home() {
         title="Criar nova carteira"
         onWalletCreated={addWallet}
       ></NewWalletModal>
-      <button className={style.addWalletButton} onClick={() => toggleModal()}>
+      <NewWalletModal
+        isOpen={isEditModalOpen}
+        onClose={toggleEditModal}
+        title="Atualizar carteira"
+        onWalletCreated={modifyWallet}
+        walletId={selectedWallet?.id}
+        currentDescription={selectedWallet?.description}
+        currentName={selectedWallet?.name}
+      ></NewWalletModal>
+      <button
+        title="Criar Nova Carteira"
+        className={style.addWalletButton}
+        onClick={() => toggleModal()}
+      >
         <i className="bi bi-plus-circle" style={{ fontSize: "24px" }}></i>
       </button>
     </main>

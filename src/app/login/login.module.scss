@@ -1,92 +1,149 @@
-.imgContainer {
-  position: relative;
-  width: 30vw;
+.mainContent {
+  width: 100vw;
+  height: 100%;
+  background: linear-gradient(to bottom, #ecf0f1, #dfe6e9); /* Gradiente suave no fundo */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+}
+
+.header {
+  background-color: white;
+  padding: 10px;
+  border-bottom: solid 1px #ddd;
+  width: 100%;
+  text-align: center;
+}
+
+.loginOptions {
+  width: 40vw;
   min-width: 300px;
-  max-width: 400px;
-  height: 20vh;
-  min-height: 150px;
-  max-width: 220px;
-  background-color: transparent;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  position: relative;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Aumenta a sombra ao passar o mouse */
+  }
+
+  .loginContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: auto;
+
+    .defaultLogin {
+      text-align: center;
+      padding-top: 30px;
+      p {
+        color: black;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+    }
+
+    .loginStrategies {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding-top: 20px;
+
+      button {
+        font-size: 1rem;
+        background-color: transparent;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 2px solid rgba(86, 255, 122, 1);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        
+        &:hover {
+          background-color: rgba(86, 255, 122, 0.1);
+          transform: scale(1.05);
+        }
+      }
+
+      .googleStrategy {
+        background-color: #db4437; /* Cor Google */
+        color: white;
+        border: none;
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          margin-left: 10px;
+        }
+
+        &:hover {
+          background-color: #c1351d; /* Cor ao passar o mouse */
+        }
+      }
+
+      .backToHome {
+        background: linear-gradient(to right, #86ff7a, #4dff67); /* Gradiente para o botão */
+        border: none;
+        color: white;
+        padding: 12px 20px;
+        font-size: 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+        margin-top: 15px;
+        transition: background 0.3s, transform 0.2s;
+        
+        &:hover {
+          background: linear-gradient(to right, #4dff67, #86ff7a);
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
 }
 
 .errorMessage {
   position: absolute;
   top: 20px;
   right: 20px;
-  width: auto;
   background-color: rgb(255, 169, 169);
   border-radius: 1rem;
   z-index: 9999;
-  padding: 3px;
+  padding: 10px;
+  font-size: 1rem;
+  color: #fff;
+  font-weight: bold;
 }
 
-.mainContent {
-  width: 100vw;
-  height: 100%;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  header {
-    background-color: white;
-    padding: 3px;
-    border-bottom: solid 1px black;
-  }
-}
-
-.loginOptions {
-  padding: 5px;
-  width: 40vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  border-radius: 5px;
+.imgContainer {
   position: relative;
-  .loginContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 70vh;
-    .defaultLogin {
-      display: flex;
-      justify-content: center;
-      padding-top: 50px;
-      text-align: center;
-      p {
-        color: black;
-        width: 80%;
-        font-size: larger;
-        font-weight: bolder;
-      }
-    }
-    .loginStrategies {
-      position: absolute;
-      bottom: 100px;
-      display: flex;
-      align-items: start;
-      width: 100%;
-      padding: 0 5px 0 5px;
-      button {
-        font-size: 1rem;
-        background-color: transparent;
-        padding: 3px;
-        border-radius: 1rem;
-        cursor: pointer;
-      }
-      .googleStrategy {
-        background-color: red;
-        color: white;
-        border: 2px solid rgb(185, 185, 185);
-        i {
-          margin-left: 5px;
-          color: rgb(202, 0, 0);
-        }
-      }
-    }
-  }
+  width: 30vw;
+  min-width: 300px;
+  height: 25vh;
+  max-height: 200px;
+  background-color: transparent;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 710px) {
@@ -97,11 +154,10 @@
 
   .loginOptions {
     width: 90vw;
-    height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    height: 80vh;
+    padding: 20px;
+    border-radius: 10px;
     background-color: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   }
 }

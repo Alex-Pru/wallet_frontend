@@ -5,7 +5,7 @@
   min-height: 100vh;
   color: #333;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 .header {
@@ -39,7 +39,11 @@
 }
 
 .menuButton {
-  background: linear-gradient(45deg, #56ff7a, #00bfa6); /* Gradiente para o botão de opções */
+  background: linear-gradient(
+    45deg,
+    #56ff7a,
+    #00bfa6
+  ); /* Gradiente para o botão de opções */
   color: white;
   border: none;
   padding: 12px 20px;
@@ -89,7 +93,15 @@
   min-height: 200px; /* Altura mínima para garantir que a área de exibição da mensagem tenha altura suficiente */
   background-color: #f9f9f9; /* Cor de fundo suave para destacar o texto */
   border-radius: 12px; /* Bordas arredondadas */
-  padding: 20px; /* Padding para garantir que a mensagem tenha algum espaço ao redor */
+  padding: 10px; /* Padding para garantir que a mensagem tenha algum espaço ao redor */
+  ul {
+    list-style: none;
+    width: 100%;
+    flex-wrap: wrap;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
 }
 
 .walletsContainer > div {
@@ -101,12 +113,31 @@
 }
 
 .walletItem {
+  position: relative;
+  width: 30%;
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 12px;
   padding: 20px;
   transition: transform 0.3s, background-color 0.3s;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  .walletTitle {
+    display: block;
+    width: 80%;
+    white-space: nowrap; /* Não permite quebra de linha */
+    overflow: hidden; /* Oculta o excesso de texto */
+    text-overflow: ellipsis;
+  }
+}
+
+.walletDescription {
+  width: 100%;
+  display: -webkit-box; // Define o container como flexível
+  line-clamp: 3;
+  -webkit-line-clamp: 3; // Limita o texto a 3 linhas (ajuste conforme necessário)
+  -webkit-box-orient: vertical; // Define o alinhamento das linhas
+  overflow: hidden; // Esconde o conteúdo excedente
+  text-overflow: ellipsis; // Adiciona "..." ao final do texto cortado
 }
 
 .walletItem:hover {
@@ -117,7 +148,7 @@
 .transactionButtons {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .transactionButtons button {
@@ -184,4 +215,44 @@
 
 .menuItems li a:hover {
   color: rgba(86, 255, 122, 1);
+}
+
+.toggleSubmenu {
+  cursor: pointer;
+  background-color: transparent;
+  position: absolute;
+  top: 25px;
+  right: 10px;
+}
+
+.subMenu {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  button {
+    padding: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border-radius: 10px;
+    border: solid 1px #ddd;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, background-color 0.3s;
+  }
+  button:hover {
+    transform: scale(1.1);
+  }
+  .editButton {
+    background-color: rgba(255, 255, 0, 0.863);
+  }
+  .eraseButton {
+    background-color: rgba(255, 0, 0, 0.2);
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .walletItem {
+    width: 100%;
+    min-height: 25vh;
+  }
 }

@@ -7,23 +7,35 @@ import ErrorPage from "@/components/error/ErrorPage";
 import Loading from "@/components/loading/Loading";
 
 import Sidebar from "@/components/sidebar/Sidebar"; // Componente do menu lateral
-import NewWalletModal from "@/components/newWalletPopup/NewWalletModal";
+import WalletManipulationModal from "@/components/walletManipulationModal/WalletManipulationModal";
+import WalletEraseModal from "@/components/WalletEraseModal/WalletEraseModal";
+import RemoveUserFromWalletModal from "@/components/RemoveUserFromWalletModal/RemoveUserFromWalletModal";
 
 export default function Home() {
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isRemoveUserModalOpen, setIsRemoveUserModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Para controlar o menu lateral
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isExclusionModalOpen, setIsOpenExclusionModal] = useState(false);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  const toggleExclusionModal = () => {
+    setIsOpenExclusionModal(!isExclusionModalOpen);
+  };
+
   const toggleEditModal = () => {
     setIsEditModalOpen(!isEditModalOpen);
+  };
+
+  const toggleUserRemoveModal = () => {
+    setIsRemoveUserModalOpen(!isRemoveUserModalOpen);
   };
 
   const router = useRouter();
@@ -79,6 +91,12 @@ export default function Home() {
     );
   };
 
+  const removeWallet = (walletId: number) => {
+    setWallets((prevWallets) =>
+      prevWallets.filter((wallet) => wallet.id !== walletId)
+    );
+  };
+
   const handleSubmenuClick = (wallet: Wallet) => {
     setSelectedWallet(selectedWallet?.id === wallet.id ? null : wallet);
   };
@@ -114,12 +132,12 @@ export default function Home() {
         ) : (
           <ul>
             {wallets.map((wallet) => (
-              <li key={wallet.id} className="walletItem">
-                <b>{wallet.name}</b>
-                <p>{wallet.description}</p>
+              <li key={wallet.id} className={style.walletItem}>
+                <b className={style.walletTitle}>{wallet.name}</b>
+                <p className={style.walletDescription}>{wallet.description}</p>
                 <p>{wallet.created_at.split("T")[0]}</p>
                 {wallet.updated_at && <p>{wallet.updated_at.split("T")[0]}</p>}
-                <div className="transactionButtons">
+                <div className={style.transactionButtons}>
                   <button
                     onClick={() =>
                       console.log(`Adicionar gasto na carteira ${wallet.id}`)
@@ -139,17 +157,31 @@ export default function Home() {
                 </div>
                 {/* Botão de 3 pontos */}
                 <div className={style.threeDotsMenu}>
-                  <button onClick={() => handleSubmenuClick(wallet)}>
+                  <button
+                    className={style.toggleSubmenu}
+                    onClick={() => handleSubmenuClick(wallet)}
+                  >
                     &#x2022;&#x2022;&#x2022; {/* Representa os três pontos */}
                   </button>
                   {/* Menu de opções */}
                   {selectedWallet?.id === wallet.id && (
-                    <div className={style.menu}>
-                      <button onClick={() => toggleEditModal()}>Editar</button>
-                      <button onClick={() => console.log("apagar")}>
+                    <div className={style.subMenu}>
+                      <button
+                        className={style.editButton}
+                        onClick={() => toggleEditModal()}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className={style.eraseButton}
+                        onClick={() => toggleExclusionModal()}
+                      >
                         Apagar
                       </button>
-                      <button onClick={() => console.log("sair")}>
+                      <button
+                        className={style.exitButton}
+                        onClick={() => toggleUserRemoveModal()}
+                      >
                         Sair da Carteira
                       </button>
                     </div>
@@ -160,21 +192,35 @@ export default function Home() {
           </ul>
         )}
       </section>
-      <NewWalletModal
+      <RemoveUserFromWalletModal
+        title="Sair da carteira"
+        isOpen={isRemoveUserModalOpen && selectedWallet !== null}
+        wallet={selectedWallet}
+        onClose={toggleUserRemoveModal}
+        onUserRemoved={removeWallet}
+      ></RemoveUserFromWalletModal>
+      <WalletEraseModal
+        title="Excluir carteira?"
+        isOpen={isExclusionModalOpen && selectedWallet !== null}
+        wallet={selectedWallet}
+        onWalletErased={removeWallet}
+        onClose={toggleExclusionModal}
+      ></WalletEraseModal>
+      <WalletManipulationModal
         isOpen={isModalOpen}
         onClose={toggleModal}
         title="Criar nova carteira"
         onWalletCreated={addWallet}
-      ></NewWalletModal>
-      <NewWalletModal
-        isOpen={isEditModalOpen}
+      ></WalletManipulationModal>
+      <WalletManipulationModal
+        isOpen={isEditModalOpen && selectedWallet !== null}
         onClose={toggleEditModal}
         title="Atualizar carteira"
         onWalletCreated={modifyWallet}
         walletId={selectedWallet?.id}
         currentDescription={selectedWallet?.description}
         currentName={selectedWallet?.name}
-      ></NewWalletModal>
+      ></WalletManipulationModal>
       <button
         title="Criar Nova Carteira"
         className={style.addWalletButton}

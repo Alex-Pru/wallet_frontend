@@ -1,0 +1,94 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); // Fundo semi-transparente
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; // Garante que fique acima de outros elementos
+}
+
+.modal {
+  background-color: #fff; // Fundo branco
+  border-radius: 12px; // Bordas arredondadas
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Sombra para dar profundidade
+  width: 90%;
+  max-width: 400px; // Tamanho máximo
+  animation: fadeIn 0.3s ease-in-out; // Animação suave ao abrir
+  overflow: hidden; // Garante que o conteúdo não extrapole o modal
+
+  &Header {
+    background: linear-gradient(45deg, #56ff7a, #00bfa6); // Cor de fundo azul
+    color: #fff; // Texto branco
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .closeButton {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.2); // Aumenta o botão ao passar o mouse
+      }
+    }
+  }
+
+  &Body {
+    padding: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333; // Texto escuro
+    text-align: center; // Centraliza o texto
+
+    button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.cancelButton {
+        background-color: #f8f9fa; // Fundo cinza claro
+        color: #333; // Texto escuro
+        border: 1px solid #ccc; // Borda cinza
+        margin-right: 10px;
+
+        &:hover {
+          background-color: #e2e6ea; // Fundo mais escuro ao passar o mouse
+        }
+      }
+
+      &.confirmButton {
+        background-color: #dc3545; // Vermelho para exclusão
+        color: #fff; // Texto branco
+        border: none;
+
+        &:hover {
+          background-color: #c82333; // Vermelho mais escuro ao passar o mouse
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

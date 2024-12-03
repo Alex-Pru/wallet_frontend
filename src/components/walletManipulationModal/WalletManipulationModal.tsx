@@ -1,5 +1,5 @@
 import { Wallet } from "@/types/Wallet";
-import style from "./NewWallet.module.scss";
+import style from "./WalletManipulationModal.module.scss";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +13,7 @@ interface ModalProps {
   walletId?: number;
 }
 
-const NewWalletModal = ({
+const WalletManipulationModal = ({
   isOpen,
   onClose,
   title,
@@ -24,14 +24,12 @@ const NewWalletModal = ({
 }: ModalProps) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [editedWalletId, setEditedWalletId] = useState<number | null>(null);
 
   const router = useRouter();
 
   useEffect(() => {
     if (currentName) setName(currentName);
     if (currentDescription) setDescription(currentDescription);
-    if (walletId) setEditedWalletId(walletId);
   }, [currentName, currentDescription]);
 
   if (!isOpen) return null;
@@ -45,7 +43,6 @@ const NewWalletModal = ({
   const resetFields = () => {
     setDescription("");
     setName("");
-    setEditedWalletId(null);
   };
 
   const handleWalletManipulation = async () => {
@@ -55,9 +52,9 @@ const NewWalletModal = ({
       body: { name, description },
     };
 
-    if (editedWalletId) {
+    if (walletId) {
       req = {
-        url: `http://localhost:4000/api/wallets/${editedWalletId}`,
+        url: `http://localhost:4000/api/wallets/${walletId}`,
         method: "PUT",
         body: { name, description },
       };
@@ -71,7 +68,7 @@ const NewWalletModal = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify(
-          editedWalletId ? { updatedFields: req.body } : { newWallet: req.body }
+          walletId ? { updatedFields: req.body } : { newWallet: req.body }
         ),
       });
 
@@ -79,9 +76,14 @@ const NewWalletModal = ({
         return router.push("/login?event=error");
       }
 
+      if (!res.ok) {
+        throw new Error(
+          "Um erro inesperado ocorreu ao criar ou atualizar carteira"
+        );
+      }
+
       if (res.ok) {
         const wallet = await res.json();
-        console.log(wallet);
         onWalletCreated(wallet); // Passa a nova carteira para o componente pai
         resetFields();
         onClose(); // Fecha o modal
@@ -122,7 +124,7 @@ const NewWalletModal = ({
             className={style.saveButton}
             onClick={handleWalletManipulation}
           >
-            {editedWalletId ? "Atualizar" : "Criar"} carteira
+            {walletId ? "Atualizar" : "Criar"} carteira
           </button>
         </div>
         <div className={style.modalFooter}></div>
@@ -131,4 +133,4 @@ const NewWalletModal = ({
   );
 };
 
-export default NewWalletModal;
+export default WalletManipulationModal;

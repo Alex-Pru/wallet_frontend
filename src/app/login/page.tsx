@@ -3,10 +3,12 @@ import Image from "next/image";
 import style from "./login.module.scss";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [showError, setShowError] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const logWithGoogle = () => {
     if (process.env.NEXT_PUBLIC_GOOGLE_AUTH_LINK) {
@@ -17,6 +19,10 @@ export default function Login() {
       );
     }
     return;
+  };
+
+  const goBackToHome = () => {
+    router.push("/"); // Volta para a página inicial
   };
 
   useEffect(() => {
@@ -53,14 +59,17 @@ export default function Login() {
         <div className={style.loginContainer}>
           <section className={style.defaultLogin}>
             <p>
-              No momento estamos apenas aceitando login utilizando o Google,
-              agradecemos a paciência.
+            Neste momento, só é possível fazer login com a conta Google. Agradecemos pela compreensão.
             </p>
           </section>
           <section className={style.loginStrategies}>
             <button onClick={logWithGoogle} className={style.googleStrategy}>
               Entre com Google
               <i className="bi bi-google"></i>
+            </button>
+            {/* Botão de retorno à página inicial */}
+            <button onClick={goBackToHome} className={style.backToHome}>
+              Voltar ao Início
             </button>
           </section>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/sidebar/Sidebar";
+import RemoveUserModal from "@/components/RemoveUserModal/RemoveUserModal";
 import styles from "./UserProfile.module.scss";
 import { User } from "@/types/User";
 import { useRouter } from "next/navigation";
@@ -12,8 +13,13 @@ export default function UserProfile() {
   const [formData, setFormData] = useState({ name: "", email: "" });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isExclusionModalOpen, setIsExclusionModalOpen] = useState(false);
 
   const router = useRouter();
+
+  const toggleExclusionModal = () => {
+    setIsExclusionModalOpen(!isExclusionModalOpen);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -73,53 +79,67 @@ export default function UserProfile() {
   if (!user) return <Loading></Loading>;
 
   return (
-    <main className={styles.container}>
+    <main className={styles.mainContainer}>
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <button onClick={toggleSidebar} className={styles.sidebarToggle}>
         ☰
       </button>
-      <h1>Perfil do Usuário</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <label>
-          Nome:
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </label>
+      <div className={styles.container}>
+        <h1>Perfil do Usuário</h1>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <label>
+            Nome:
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label>
-          E-mail:
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-        </label>
+          <label>
+            E-mail:
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label>
-          Criado em:
-          <input
-            type="text"
-            value={user.created_at ? user.created_at.split("T")[0] : ""}
-            disabled
-          />
-        </label>
+          <label>
+            Criado em:
+            <input
+              type="text"
+              value={user.created_at ? user.created_at.split("T")[0] : ""}
+              disabled
+            />
+          </label>
 
-        <label>
-          Atualizado em:
-          <input
-            type="text"
-            value={user.updated_at ? user.updated_at.split("T")[0] : ""}
-            disabled
-          ></input>
-        </label>
+          <label>
+            Atualizado em:
+            <input
+              type="text"
+              value={user.updated_at ? user.updated_at.split("T")[0] : ""}
+              disabled
+            ></input>
+          </label>
 
-        <button type="submit">Salvar</button>
-      </form>
+          <button type="submit">Salvar</button>
+          <button
+            className={styles.exclusionButton}
+            onClick={toggleExclusionModal}
+            type="button"
+          >
+            Excluir Conta
+          </button>
+        </form>
+      </div>
+      <RemoveUserModal
+        title="Exclusão de Conta"
+        isOpen={isExclusionModalOpen}
+        onClose={toggleExclusionModal}
+      ></RemoveUserModal>
     </main>
   );
 }

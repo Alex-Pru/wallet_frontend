@@ -141,8 +141,10 @@ export default function Home() {
                   {wallet.name}
                 </Link>
                 <p className={style.walletDescription}>{wallet.description}</p>
-                <p>{wallet.created_at.split("T")[0]}</p>
-                {wallet.updated_at && <p>{wallet.updated_at.split("T")[0]}</p>}
+                <p>Criada em: {wallet.created_at.split("T")[0]}</p>
+                {wallet.updated_at && (
+                  <p> Editada em: {wallet.updated_at.split("T")[0]}</p>
+                )}
                 <div className={style.transactionButtons}>
                   <button
                     onClick={() =>

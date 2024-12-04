@@ -18,10 +18,14 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
       </button>
       <ul className={style.menuItems}>
         <li>
-          <Link href="/home">Home</Link> {/* Apenas o Link é suficiente */}
+          <Link href="/home">Página Inicial</Link>{" "}
+          {/* Apenas o Link é suficiente */}
         </li>
         <li>
-          <Link href="/">About</Link>
+          <Link href="/">Sobre</Link>
+        </li>
+        <li>
+          <Link href="/profile">Perfil</Link>
         </li>
       </ul>
     </div>

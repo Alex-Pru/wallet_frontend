@@ -10,6 +10,7 @@ import Sidebar from "@/components/sidebar/Sidebar"; // Componente do menu latera
 import WalletManipulationModal from "@/components/walletManipulationModal/WalletManipulationModal";
 import WalletEraseModal from "@/components/WalletEraseModal/WalletEraseModal";
 import RemoveUserFromWalletModal from "@/components/RemoveUserFromWalletModal/RemoveUserFromWalletModal";
+import Link from "next/link";
 
 export default function Home() {
   const [wallets, setWallets] = useState<Wallet[]>([]);
@@ -133,7 +134,12 @@ export default function Home() {
           <ul>
             {wallets.map((wallet) => (
               <li key={wallet.id} className={style.walletItem}>
-                <b className={style.walletTitle}>{wallet.name}</b>
+                <Link
+                  href={`/details/${wallet.id}`}
+                  className={style.walletTitle}
+                >
+                  {wallet.name}
+                </Link>
                 <p className={style.walletDescription}>{wallet.description}</p>
                 <p>{wallet.created_at.split("T")[0]}</p>
                 {wallet.updated_at && <p>{wallet.updated_at.split("T")[0]}</p>}

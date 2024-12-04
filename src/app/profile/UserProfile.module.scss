@@ -1,0 +1,80 @@
+$white: #ffffff;
+$green: #28a745;
+$black: #000000;
+
+.container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  background-color: $white;
+  color: $black;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.sidebarToggle {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: $green;
+  color: $white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: darken($green, 10%);
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+
+    input {
+      padding: 0.5rem;
+      border-bottom: solid 1px black;
+      margin-top: 0.5rem;
+    }
+
+    input:disabled {
+      background-color: $white;
+      color: $black;
+      cursor: not-allowed;
+    }
+  }
+
+  button {
+    padding: 0.75rem;
+    background-color: $green;
+    color: $white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($green, 10%);
+    }
+  }
+}

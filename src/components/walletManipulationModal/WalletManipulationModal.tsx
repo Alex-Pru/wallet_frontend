@@ -96,29 +96,56 @@ const WalletManipulationModal = ({
   };
 
   return (
-    <div className={style.modalOverlay} onClick={handleOverlayClick}>
+    <div
+      className={style.modalOverlay}
+      onClick={handleOverlayClick}
+      role="dialog"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+    >
       <div className={style.modal}>
         <div className={style.modalHeader}>
-          <h2>{title}</h2>
-          <button onClick={onClose} className={style.closeButton}>
+          <h2 id="modal-title">{title}</h2>
+          <button
+            onClick={onClose}
+            className={style.closeButton}
+            aria-label="Fechar modal"
+          >
             &times;
           </button>
         </div>
         <div className={style.modalBody}>
-          <label htmlFor="wallet_name">Nome:</label>
+          <label htmlFor="wallet_name">Nome da Carteira:</label>
           <input
+            id="wallet_name"
             name="wallet_name"
             type="text"
             onChange={(e) => setName(e.target.value)}
             value={name}
+            placeholder="Digite o nome da carteira"
+            aria-required="true"
           />
           <label htmlFor="wallet_description">Descrição:</label>
           <textarea
+            id="wallet_description"
             name="wallet_description"
-            id="description"
             onChange={(e) => setDescription(e.target.value)}
             value={description}
+            placeholder="Digite uma descrição para a carteira"
+            aria-required="false"
           ></textarea>
+        </div>
+        <div className={style.modalFooter}>
+          <button
+            type="button"
+            className={style.cancelButton}
+            onClick={() => {
+              resetFields();
+              onClose();
+            }}
+          >
+            Cancelar
+          </button>
           <button
             type="button"
             className={style.saveButton}
@@ -127,7 +154,6 @@ const WalletManipulationModal = ({
             {walletId ? "Atualizar" : "Criar"} carteira
           </button>
         </div>
-        <div className={style.modalFooter}></div>
       </div>
     </div>
   );

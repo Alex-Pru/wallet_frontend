@@ -1,6 +1,8 @@
+import { Category } from "./Category";
+import { User } from "./User";
 export type WalletDetails = {
   id: number;
   name: string;
-  totalIncomes: number;
-  totalExpenses: number;
+  users: User[];
+  categories: Category[];
 };

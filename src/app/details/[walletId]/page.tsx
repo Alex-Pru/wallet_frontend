@@ -9,6 +9,9 @@ import styles from "./Wallet.module.scss";
 import Sidebar from "@/components/sidebar/Sidebar";
 import TransactionManipulationModal from "@/components/TransactionManipulationModal/TransactionManipulationModal";
 import TransactionExclusionModal from "@/components/TransactionExclusionModal/TransactionExclusionModal";
+import { Category } from "@/types/Category";
+import { User } from "@/types/User";
+import WalletUsersModal from "@/components/WalletUsersModal/WalletUsersModal";
 
 const Wallets = () => {
   const params = useParams();
@@ -21,9 +24,6 @@ const Wallets = () => {
   }
 
   const [loading, setLoading] = useState(true);
-  const [walletDetails, setWalletDetails] = useState<WalletDetails | null>(
-    null
-  );
   const [error, setError] = useState<string | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -34,6 +34,10 @@ const Wallets = () => {
     useState(false);
   const [isTransactionExclusionModalOpen, setIsTransactionExclusionModalOpen] =
     useState(false);
+  const [isWalletUserModalOpen, setIsWalletUserModalOpen] = useState(false);
+  const [walletName, setWalletName] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const toggleExclusionModal = () => {
     setIsTransactionExclusionModalOpen(!isTransactionExclusionModalOpen);
@@ -44,6 +48,26 @@ const Wallets = () => {
       ...prevTransactions,
       newTransaction,
     ]);
+  };
+
+  const toggleWalletUserModal = () => {
+    setIsWalletUserModalOpen(!isWalletUserModalOpen);
+  };
+
+  const handleUserUpdated = (updatedUser: User) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.id === updatedUser.id ? { ...user, ...updatedUser } : user
+      )
+    );
+  };
+
+  const handleUserRemoved = (userId: number) => {
+    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+  };
+
+  const handleUserAdded = (newUser: User) => {
+    setUsers((prevUsers) => [...prevUsers, newUser]);
   };
 
   const toggleEditTransactionModal = () => {
@@ -103,7 +127,9 @@ const Wallets = () => {
         }
 
         const data: WalletDetails = await res.json();
-        setWalletDetails(data);
+        if (data.name !== walletName) setWalletName(data.name);
+        setCategories(data.categories);
+        setUsers(data.users);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "An unknown error occurred."
@@ -165,9 +191,9 @@ const Wallets = () => {
       <button className={styles.btnSidebar} onClick={toggleSidebar}>
         <i className="bi bi-list"></i>
       </button>
-      {walletDetails && (
+      {walletName && (
         <header className={styles.walletDetails}>
-          <h1>{walletDetails.name}</h1>
+          <h1>{walletName}</h1>
           <div className={styles.incomesAndExpensesContainer}>
             <p className={styles.incomes}>
               <i className="bi bi-arrow-up"></i>Recebimentos:{" "}
@@ -185,7 +211,10 @@ const Wallets = () => {
         <button onClick={toggleTransactionModal} className={styles.btnAdd}>
           <i className="bi bi-plus-circle"></i> Adicionar Transação
         </button>
-        <button className={styles.btnParticipants}>
+        <button
+          onClick={toggleWalletUserModal}
+          className={styles.btnParticipants}
+        >
           <i className="bi bi-people"></i> Participantes
         </button>
         <button className={styles.btnCategories}>
@@ -235,6 +264,7 @@ const Wallets = () => {
         isOpen={isTransactionModalOpen}
         onClose={toggleTransactionModal}
         onTransactionManipulated={addTransactionToList}
+        categories={categories}
         walletId={Number(walletId)}
       ></TransactionManipulationModal>
 
@@ -245,6 +275,7 @@ const Wallets = () => {
           onTransactionManipulated={modifyTransaction}
           onClose={toggleEditTransactionModal}
           transaction={selectedTransaction}
+          categories={categories}
           walletId={Number(walletId)}
         ></TransactionManipulationModal>
       )}
@@ -260,6 +291,15 @@ const Wallets = () => {
           transaction={selectedTransaction}
         ></TransactionExclusionModal>
       )}
+      <WalletUsersModal
+        isOpen={isWalletUserModalOpen}
+        onClose={toggleWalletUserModal}
+        users={users}
+        walletId={Number(walletId)}
+        onUserAdded={handleUserAdded}
+        onUserRemoved={handleUserRemoved}
+        onUserUpdated={handleUserUpdated}
+      ></WalletUsersModal>
     </main>
   );
 };

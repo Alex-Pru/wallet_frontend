@@ -1,0 +1,170 @@
+$primary-color: #00bfa6;
+$secondary-color: #56ff7a;
+$background-color: #f9f9f9;
+$text-color: #000;
+$box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #fff;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  position: relative;
+  box-shadow: $box-shadow;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 1.5rem;
+    color: $primary-color;
+  }
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #000;
+  cursor: pointer;
+  padding: 0;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  textarea {
+    min-height: 80px;
+  }
+
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+  }
+}
+
+.amountInput {
+  position: relative;
+
+  input {
+    padding-right: 30px; // Espaço para o símbolo de moeda
+  }
+
+  &::after {
+    content: "R$";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: $primary-color;
+  }
+}
+
+.transactionType {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  select {
+    width: 48%;
+  }
+
+  button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: $primary-color;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+
+    &:disabled {
+      background-color: #ddd;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.modalFooter {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .modalHeader h2 {
+    font-size: 1.2rem;
+  }
+
+  .modalBody {
+    gap: 10px;
+    input,
+    textarea,
+    select {
+      font-size: 12px;
+    }
+  }
+
+  .amountInput input {
+    padding-right: 25px; // Ajuste para o tamanho da fonte menor
+  }
+
+  .transactionType {
+    flex-direction: column;
+    gap: 5px;
+    select {
+      width: 100%;
+    }
+    button {
+      font-size: 14px;
+      padding: 10px 15px;
+    }
+  }
+}

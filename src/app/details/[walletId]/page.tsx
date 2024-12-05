@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./Wallet.module.scss";
 import Sidebar from "@/components/sidebar/Sidebar";
+import TransactionManipulationModal from "@/components/TransactionManipulationModal/TransactionManipulationModal";
 
 const Wallets = () => {
   const params = useParams();
@@ -20,6 +21,18 @@ const Wallets = () => {
   const [error, setError] = useState<string | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+
+  const addTransactionToList = (newTransaction: Transaction) => {
+    setTransactions((prevTransactions) => [
+      ...prevTransactions,
+      newTransaction,
+    ]);
+  };
+
+  const toggleTransactionModal = () => {
+    setIsTransactionModalOpen(!isTransactionModalOpen);
+  };
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -123,7 +136,7 @@ const Wallets = () => {
       )}
 
       <section className={styles.walletActions}>
-        <button className={styles.btnAdd}>
+        <button onClick={toggleTransactionModal} className={styles.btnAdd}>
           <i className="bi bi-plus-circle"></i> Adicionar Transação
         </button>
         <button className={styles.btnParticipants}>
@@ -172,6 +185,13 @@ const Wallets = () => {
         )}
       </section>
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar}></Sidebar>
+      <TransactionManipulationModal
+        title="Criar Transação"
+        isOpen={isTransactionModalOpen}
+        onClose={toggleTransactionModal}
+        onTransactionCreated={addTransactionToList}
+        walletId={Number(walletId)}
+      ></TransactionManipulationModal>
     </main>
   );
 };

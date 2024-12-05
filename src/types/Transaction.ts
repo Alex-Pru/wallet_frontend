@@ -3,9 +3,9 @@ export type Transaction = {
   wallet_id: number;
   credit_card_id?: number;
   user_id?: number;
-  category_id?: number;
+  category_id?: number | null;
   type: string;
-  amount: number;
+  amount: string;
   title: string;
   description?: string;
   date: string;

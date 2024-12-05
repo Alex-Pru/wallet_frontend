@@ -8,7 +8,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  onTransactionCreated: (newTransaction: Transaction) => void;
+  onTransactionManipulated: (newTransaction: Transaction) => void;
   categories?: Category[];
   transaction?: Transaction;
   walletId: number;
@@ -18,20 +18,21 @@ const TransactionManipulationModal = ({
   isOpen,
   onClose,
   title,
-  onTransactionCreated,
+  onTransactionManipulated,
   categories,
   transaction,
   walletId,
 }: ModalProps) => {
+  if (transaction) {
+    transaction.date = transaction.date.split("T")[0];
+  }
   const [amount, setAmount] = useState<string>("");
-  const [titleField, setTitleField] = useState(transaction?.title || "");
+  const [titleField, setTitleField] = useState("");
   const [description, setDescription] = useState(
     transaction?.description || ""
   );
-  const [date, setDate] = useState(transaction?.date || "");
-  const [categoryId, setCategoryId] = useState<number | undefined>(
-    transaction?.category_id
-  );
+  const [date, setDate] = useState("");
+  const [categoryId, setCategoryId] = useState<number | null>(null);
   const [type, setType] = useState(transaction?.type || "income");
   const [errors, setErrors] = useState<string[]>([]);
 
@@ -42,28 +43,9 @@ const TransactionManipulationModal = ({
     setDescription(""); // Reseta a descrição
     setAmount(""); // Reseta o valor
     setDate(""); // Reseta a data
-    setCategoryId(undefined); // Reseta a categoria
+    setCategoryId(null); // Reseta a categoria
     setType("income"); // Reseta para o tipo padrão (income)
     setErrors([]);
-  };
-
-  useEffect(() => {
-    if (transaction) {
-      setAmount(formatCurrency(transaction.amount));
-      setTitleField(transaction.title);
-      setDescription(transaction.description || "");
-      setDate(transaction.date);
-      setCategoryId(transaction.category_id);
-      setType(transaction.type);
-    }
-  }, [transaction]);
-
-  if (!isOpen) return null;
-
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      handleModalClose();
-    }
   };
 
   const formatCurrency = (value: number | string): string => {
@@ -77,14 +59,36 @@ const TransactionManipulationModal = ({
     }).format(numericValue || 0);
   };
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = e.target.value.replace(/[^\d]/g, ""); // Remove tudo que não for número
-    const numericValue = parseInt(rawValue, 10) || 0; // Converte para número ou 0 se vazio
+  useEffect(() => {
+    if (transaction) {
+      setAmount(formatCurrency(transaction.amount));
+      setTitleField(transaction.title);
+      setDescription(transaction.description || "");
+      setDate(transaction.date);
+      if (transaction.category_id) setCategoryId(transaction.category_id);
+      setType(transaction.type);
+    }
+  }, [transaction]);
 
-    // Formata o valor como dinheiro em BRL
+  if (!isOpen) return null;
+
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Pega o valor bruto digitado
+    const rawValue = e.target.value.replace(/[^\d]/g, ""); // Apenas números
+
+    // Formata para exibição sem perder o controle do cursor
+    const numericValue = parseInt(rawValue, 10) || 0; // Valor numérico
+
+    // Divide por 100 para representar centavos
     const formattedValue = (numericValue / 100).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
+      minimumFractionDigits: 2, // Sempre mostra 2 casas decimais
+      maximumFractionDigits: 2,
     });
 
     setAmount(formattedValue); // Atualiza o estado com o valor formatado
@@ -97,7 +101,12 @@ const TransactionManipulationModal = ({
       validationErrors.push("O título é obrigatório.");
     }
 
-    if (!amount || parseFloat(amount.replace(/[^\d.-]/g, "")) <= 0) {
+    // Extração correta do valor numérico de `amount`
+    const numericAmount = parseFloat(
+      amount.replace(/[^\d,-]/g, "").replace(",", ".")
+    );
+
+    if (!numericAmount || numericAmount <= 0) {
       validationErrors.push("O valor deve ser maior que zero.");
     }
 
@@ -116,8 +125,12 @@ const TransactionManipulationModal = ({
   const handleTransactionManipulation = async () => {
     if (!validateFields()) return;
 
-    const newTransaction: Partial<Transaction> = {
-      amount: parseFloat(amount.replace(/[^\d.-]/g, "")),
+    const numericAmount = parseFloat(
+      amount.replace(/[^\d,-]/g, "").replace(",", ".")
+    );
+
+    const fields: Partial<Transaction> = {
+      amount: numericAmount.toString(),
       title: titleField,
       description,
       date,
@@ -128,13 +141,15 @@ const TransactionManipulationModal = ({
     try {
       const res = await fetch(
         transaction
-          ? `http://localhost:4000/api/transactions/${transaction.id}`
+          ? `http://localhost:4000/api/transactions/${walletId}?transactionId=${transaction.id}`
           : `http://localhost:4000/api/transactions/${walletId}`,
         {
           method: transaction ? "PUT" : "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ newTransaction }),
+          body: JSON.stringify(
+            transaction ? { updatedFields: fields } : { newTransaction: fields }
+          ),
         }
       );
 
@@ -147,16 +162,12 @@ const TransactionManipulationModal = ({
       }
 
       const savedTransaction = await res.json();
-      onTransactionCreated(savedTransaction);
-      handleModalClose();
+      onTransactionManipulated(savedTransaction);
+      if (!transaction) resetFields();
+      onClose();
     } catch (err) {
-      console.error(err);
+      alert(err);
     }
-  };
-
-  const handleModalClose = () => {
-    resetFields();
-    onClose();
   };
 
   return (
@@ -164,7 +175,7 @@ const TransactionManipulationModal = ({
       <div className={style.modal}>
         <div className={style.modalHeader}>
           <h2>{title}</h2>
-          <button onClick={handleModalClose} className={style.closeButton}>
+          <button onClick={onClose} className={style.closeButton}>
             &times;
           </button>
         </div>
@@ -189,6 +200,7 @@ const TransactionManipulationModal = ({
             type="text"
             value={amount}
             onChange={handleAmountChange}
+            inputMode="decimal"
           />
           <label htmlFor="type">Tipo:</label>
           <div>
@@ -223,8 +235,12 @@ const TransactionManipulationModal = ({
           <label htmlFor="category">Categoria:</label>
           <select
             id="category"
-            value={categoryId}
-            onChange={(e) => setCategoryId(Number(e.target.value) || undefined)}
+            value={categoryId ? categoryId : ""}
+            onChange={(e) =>
+              e.target.value
+                ? setCategoryId(Number(e.target.value))
+                : setCategoryId(null)
+            }
           >
             <option value="">Selecione uma categoria</option>
             {categories

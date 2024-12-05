@@ -163,7 +163,6 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
 
     &:hover {
-      transform: scale(1.02);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
@@ -196,19 +195,14 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .transactionMenu {
-      display: none;
       position: absolute;
-      top: 100%;
+      top: 70%;
       right: 10px;
       background: #fff;
       border: 1px solid #ddd;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       z-index: 10;
-
-      &.show {
-        display: block;
-      }
 
       button {
         display: flex;

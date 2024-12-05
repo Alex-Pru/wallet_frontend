@@ -8,11 +8,17 @@ import { useEffect, useState } from "react";
 import styles from "./Wallet.module.scss";
 import Sidebar from "@/components/sidebar/Sidebar";
 import TransactionManipulationModal from "@/components/TransactionManipulationModal/TransactionManipulationModal";
+import TransactionExclusionModal from "@/components/TransactionExclusionModal/TransactionExclusionModal";
 
 const Wallets = () => {
   const params = useParams();
   const { walletId } = params;
   const router = useRouter();
+
+  if (!walletId || isNaN(Number(walletId)) || walletId === "") {
+    router.push("/home");
+    return;
+  }
 
   const [loading, setLoading] = useState(true);
   const [walletDetails, setWalletDetails] = useState<WalletDetails | null>(
@@ -22,6 +28,16 @@ const Wallets = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
+  const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] =
+    useState(false);
+  const [isTransactionExclusionModalOpen, setIsTransactionExclusionModalOpen] =
+    useState(false);
+
+  const toggleExclusionModal = () => {
+    setIsTransactionExclusionModalOpen(!isTransactionExclusionModalOpen);
+  };
 
   const addTransactionToList = (newTransaction: Transaction) => {
     setTransactions((prevTransactions) => [
@@ -30,12 +46,32 @@ const Wallets = () => {
     ]);
   };
 
+  const toggleEditTransactionModal = () => {
+    setIsEditTransactionModalOpen(!isEditTransactionModalOpen);
+  };
+
   const toggleTransactionModal = () => {
     setIsTransactionModalOpen(!isTransactionModalOpen);
   };
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
+  };
+
+  const removeTransaction = (transactionId: number) => {
+    setTransactions((prevTransactions) =>
+      prevTransactions.filter((transaction) => transaction.id !== transactionId)
+    );
+  };
+
+  const modifyTransaction = (changedTransaction: Transaction) => {
+    setTransactions((prevTransactions) =>
+      prevTransactions.map((transaction) =>
+        transaction.id === changedTransaction.id
+          ? { ...transaction, ...changedTransaction }
+          : transaction
+      )
+    );
   };
 
   useEffect(() => {
@@ -104,15 +140,25 @@ const Wallets = () => {
     fetchTransactions();
   }, [walletId, router]);
 
-  const toggleMenu = (id: number) => {
-    const menu = document.getElementById(`menu-${id}`);
-    if (menu) {
-      menu.classList.toggle(styles.show);
-    }
+  const handleSubmenuClick = (newTransaction: Transaction) => {
+    setSelectedTransaction(
+      newTransaction?.id === selectedTransaction?.id ? null : newTransaction
+    );
+
+    if (selectedTransaction === null) setIsEditTransactionModalOpen(false);
   };
 
   if (loading) return <Loading />;
   if (error) return <ErrorPage message={error} />;
+
+  // Calcula os totais
+  const totalIncomes = transactions
+    .filter((transaction) => transaction.type === "income")
+    .reduce((acc, transaction) => acc + parseFloat(transaction.amount), 0);
+
+  const totalExpenses = transactions
+    .filter((transaction) => transaction.type === "expense")
+    .reduce((acc, transaction) => acc + parseFloat(transaction.amount), 0);
 
   return (
     <main className={styles.walletContainer}>
@@ -124,12 +170,12 @@ const Wallets = () => {
           <h1>{walletDetails.name}</h1>
           <div className={styles.incomesAndExpensesContainer}>
             <p className={styles.incomes}>
-              <i className="bi bi-arrow-up"></i>Recebimentos:
-              {walletDetails.totalIncomes}
+              <i className="bi bi-arrow-up"></i>Recebimentos:{" "}
+              {totalIncomes.toFixed(2)}
             </p>
             <p className={styles.expenses}>
-              <i className="bi bi-arrow-down"></i>Gastos:
-              {walletDetails.totalExpenses}
+              <i className="bi bi-arrow-down"></i>Gastos:{" "}
+              {totalExpenses.toFixed(2)}
             </p>
           </div>
         </header>
@@ -162,21 +208,20 @@ const Wallets = () => {
                 </div>
                 <button
                   className={styles.btnMenu}
-                  onClick={() => toggleMenu(transaction.id)}
+                  onClick={() => handleSubmenuClick(transaction)}
                 >
                   <i className="bi bi-three-dots-vertical"></i>
                 </button>
-                <div
-                  id={`menu-${transaction.id}`}
-                  className={`${styles.transactionMenu}`}
-                >
-                  <button>
-                    <i className="bi bi-pencil"></i> Editar
-                  </button>
-                  <button>
-                    <i className="bi bi-trash"></i> Excluir
-                  </button>
-                </div>
+                {selectedTransaction?.id === transaction.id && (
+                  <div className={styles.transactionMenu}>
+                    <button onClick={() => toggleEditTransactionModal()}>
+                      <i className="bi bi-pencil"></i> Editar
+                    </button>
+                    <button onClick={() => toggleExclusionModal()}>
+                      <i className="bi bi-trash"></i> Excluir
+                    </button>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -189,9 +234,32 @@ const Wallets = () => {
         title="Criar Transação"
         isOpen={isTransactionModalOpen}
         onClose={toggleTransactionModal}
-        onTransactionCreated={addTransactionToList}
+        onTransactionManipulated={addTransactionToList}
         walletId={Number(walletId)}
       ></TransactionManipulationModal>
+
+      {selectedTransaction !== null && (
+        <TransactionManipulationModal
+          title="Editar Transação"
+          isOpen={isEditTransactionModalOpen && selectedTransaction !== null}
+          onTransactionManipulated={modifyTransaction}
+          onClose={toggleEditTransactionModal}
+          transaction={selectedTransaction}
+          walletId={Number(walletId)}
+        ></TransactionManipulationModal>
+      )}
+      {selectedTransaction !== null && (
+        <TransactionExclusionModal
+          isOpen={
+            isTransactionExclusionModalOpen && selectedTransaction !== null
+          }
+          onClose={toggleExclusionModal}
+          title="Exclusão de Transação"
+          onTransactionErased={removeTransaction}
+          walletId={Number(walletId)}
+          transaction={selectedTransaction}
+        ></TransactionExclusionModal>
+      )}
     </main>
   );
 };

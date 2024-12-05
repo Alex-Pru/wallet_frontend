@@ -1,31 +1,24 @@
-$primary-color: #00bfa6;
-$secondary-color: #56ff7a;
-$background-color: #f9f9f9;
-$text-color: #000;
-$box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
 .modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 999;
+  transition: opacity 0.3s ease;
 }
 
 .modal {
-  background-color: #fff;
+  background-color: white;
   border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
   padding: 20px;
-  position: relative;
-  box-shadow: $box-shadow;
-  overflow-y: auto;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
 }
 
@@ -37,17 +30,22 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   h2 {
     font-size: 1.5rem;
-    color: $primary-color;
+    color: #333;
+    margin: 0;
   }
-}
 
-.closeButton {
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #000;
-  cursor: pointer;
-  padding: 0;
+  .closeButton {
+    font-size: 1.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #e74c3c;
+    }
+  }
 }
 
 .modalBody {
@@ -55,87 +53,61 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   gap: 15px;
 
-  input,
-  textarea,
-  select {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-  }
-
-  textarea {
-    min-height: 80px;
-  }
-
   label {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 1rem;
     color: #333;
-    margin-bottom: 5px;
-  }
-}
-
-.amountInput {
-  position: relative;
-
-  input {
-    padding-right: 30px; // Espaço para o símbolo de moeda
   }
 
-  &::after {
-    content: "R$";
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-weight: bold;
-    color: $primary-color;
-  }
-}
-
-.transactionType {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-
-  select {
-    width: 48%;
+  input,
+  select,
+  textarea {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+    resize: none;
+    &:focus {
+      outline: none;
+      border-color: #3498db;
+    }
   }
 
-  button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: $primary-color;
+  input[type="radio"] {
+    margin-right: 5px;
+  }
+
+  .errorList {
+    list-style-type: none;
+    color: #e74c3c;
+    padding: 0;
+    margin-bottom: 20px;
+
+    li {
+      font-size: 0.9rem;
+    }
+  }
+
+  .saveButton {
+    background-color: #3498db;
     color: white;
-    font-size: 16px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    text-align: center;
 
     &:hover {
-      background-color: darken($primary-color, 10%);
-    }
-
-    &:disabled {
-      background-color: #ddd;
-      cursor: not-allowed;
+      background-color: #2980b9;
     }
   }
 }
 
-.modalFooter {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
+// Responsividade
 @media (max-width: 768px) {
   .modal {
-    width: 90%;
+    width: 95%;
     padding: 15px;
   }
 
@@ -144,27 +116,27 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .modalBody {
-    gap: 10px;
-    input,
-    textarea,
-    select {
-      font-size: 12px;
-    }
+    gap: 12px;
   }
 
-  .amountInput input {
-    padding-right: 25px; // Ajuste para o tamanho da fonte menor
+  .saveButton {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    width: 100%;
+    padding: 10px;
   }
 
-  .transactionType {
-    flex-direction: column;
-    gap: 5px;
-    select {
-      width: 100%;
-    }
-    button {
-      font-size: 14px;
-      padding: 10px 15px;
-    }
+  .modalHeader h2 {
+    font-size: 1rem;
+  }
+
+  .saveButton {
+    padding: 8px 16px;
+    font-size: 0.8rem;
   }
 }

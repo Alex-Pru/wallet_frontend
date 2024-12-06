@@ -65,7 +65,7 @@ const TransactionManipulationModal = ({
       setTitleField(transaction.title);
       setDescription(transaction.description || "");
       setDate(transaction.date);
-      if (transaction.category_id) setCategoryId(transaction.category_id);
+      setCategoryId(transaction.category_id ? transaction.category_id : null);
       setType(transaction.type);
     }
   }, [transaction]);

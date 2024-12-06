@@ -95,10 +95,15 @@ const WalletUsersModal = ({
         body: JSON.stringify({ newUser: newUserObject }),
       });
 
+      if (res.status === 403) {
+        router.push("/login");
+        return;
+      }
+
       if (!res.ok) throw new Error("Erro ao adicionar o usuário");
 
       const newUser: User = await res.json();
-      console.log(newUser);
+
       onUserAdded(newUser);
       setNewUserEmail("");
       setError("");

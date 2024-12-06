@@ -12,6 +12,7 @@ import TransactionExclusionModal from "@/components/TransactionExclusionModal/Tr
 import { Category } from "@/types/Category";
 import { User } from "@/types/User";
 import WalletUsersModal from "@/components/WalletUsersModal/WalletUsersModal";
+import WalletCategoriesModal from "@/components/WalletCategoriesModal/WalletCategoriesModal";
 
 const Wallets = () => {
   const params = useParams();
@@ -38,6 +39,7 @@ const Wallets = () => {
   const [walletName, setWalletName] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [isCategoriesModalOpen, setIsCategoriesModalOpen] = useState(false);
 
   const toggleExclusionModal = () => {
     setIsTransactionExclusionModalOpen(!isTransactionExclusionModalOpen);
@@ -52,6 +54,9 @@ const Wallets = () => {
 
   const toggleWalletUserModal = () => {
     setIsWalletUserModalOpen(!isWalletUserModalOpen);
+  };
+  const toggleCategoriesModal = () => {
+    setIsCategoriesModalOpen(!isCategoriesModalOpen);
   };
 
   const handleUserUpdated = (updatedUser: User) => {
@@ -68,6 +73,24 @@ const Wallets = () => {
 
   const handleUserAdded = (newUser: User) => {
     setUsers((prevUsers) => [...prevUsers, newUser]);
+  };
+
+  const handleAddCategory = (newCategory: Category) => {
+    setCategories((prevCategories) => [...prevCategories, newCategory]);
+  };
+
+  const handleUpdateCategory = (updatedCategory: Category) => {
+    setCategories((prevCategories) =>
+      prevCategories.map((category) =>
+        category.id === updatedCategory.id ? updatedCategory : category
+      )
+    );
+  };
+
+  const handleRemoveCategory = (categoryId: number) => {
+    setCategories((prevCategories) =>
+      prevCategories.filter((category) => category.id !== categoryId)
+    );
   };
 
   const toggleEditTransactionModal = () => {
@@ -217,7 +240,10 @@ const Wallets = () => {
         >
           <i className="bi bi-people"></i> Participantes
         </button>
-        <button className={styles.btnCategories}>
+        <button
+          onClick={toggleCategoriesModal}
+          className={styles.btnCategories}
+        >
           <i className="bi bi-tag"></i> Categorias
         </button>
       </section>
@@ -300,6 +326,15 @@ const Wallets = () => {
         onUserRemoved={handleUserRemoved}
         onUserUpdated={handleUserUpdated}
       ></WalletUsersModal>
+      <WalletCategoriesModal
+        isOpen={isCategoriesModalOpen}
+        onClose={toggleCategoriesModal}
+        categories={categories}
+        walletId={Number(walletId)}
+        onCategoryAdded={handleAddCategory}
+        onCategoryRemoved={handleRemoveCategory}
+        onCategoryUpdated={handleUpdateCategory}
+      ></WalletCategoriesModal>
     </main>
   );
 };

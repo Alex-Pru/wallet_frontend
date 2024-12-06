@@ -139,6 +139,7 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 10px;
   border-radius: 10px;
   box-shadow: $box-shadow;
+
   h2 {
     font-size: 20px;
     margin-bottom: 10px;
@@ -148,6 +149,21 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   ul {
     list-style: none;
     padding: 0;
+    padding: 2px;
+    max-height: 60vh; // Altura máxima para o scroll
+    overflow-y: auto; // Rolagem vertical
+
+    // Estiliza a barra de rolagem para compatibilidade visual
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $primary-color;
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: darken($primary-color, 10%);
+    }
   }
 
   .transactionItem {
@@ -173,6 +189,10 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         display: block;
         font-size: 16px;
         color: $primary-color;
+        width: 80%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       p {
@@ -192,6 +212,14 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       font-size: 18px;
       cursor: pointer;
       color: $primary-color;
+    }
+
+    @media screen and (max-width: 350px) {
+      .btnMenu {
+        position: absolute;
+        right: 10px;
+        top: 20px;
+      }
     }
 
     .transactionMenu {

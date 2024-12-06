@@ -43,6 +43,16 @@
   }
 
   .modalBody {
+    @media screen and (max-width: 400px) {
+      .userItem {
+        width: 100%;
+        font-size: small;
+      }
+      .modalBody {
+        text-wrap: wrap;
+        flex-wrap: wrap;
+      }
+    }
     .userList {
       list-style: none;
       padding: 0;
@@ -50,6 +60,7 @@
 
       .userItem {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 10px;

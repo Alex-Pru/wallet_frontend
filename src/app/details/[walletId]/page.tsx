@@ -131,7 +131,7 @@ const Wallets = () => {
     const fetchWalletDetails = async () => {
       try {
         const res = await fetch(
-          `http://localhost:4000/api/wallets/${walletId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/wallets/${walletId}`,
           {
             credentials: "include",
             method: "GET",
@@ -165,7 +165,7 @@ const Wallets = () => {
     const fetchTransactions = async () => {
       try {
         const res = await fetch(
-          `http://localhost:4000/api/transactions/${walletId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${walletId}`,
           {
             credentials: "include",
             method: "GET",

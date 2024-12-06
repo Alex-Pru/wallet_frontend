@@ -54,7 +54,7 @@ const WalletManipulationModal = ({
 
     if (walletId) {
       req = {
-        url: `http://localhost:4000/api/wallets/${walletId}`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/api/wallets/${walletId}`,
         method: "PUT",
         body: { name, description },
       };

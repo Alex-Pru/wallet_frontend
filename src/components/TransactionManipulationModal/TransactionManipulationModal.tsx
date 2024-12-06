@@ -141,8 +141,8 @@ const TransactionManipulationModal = ({
     try {
       const res = await fetch(
         transaction
-          ? `http://localhost:4000/api/transactions/${walletId}?transactionId=${transaction.id}`
-          : `http://localhost:4000/api/transactions/${walletId}`,
+          ? `${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${walletId}?transactionId=${transaction.id}`
+          : `${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${walletId}`,
         {
           method: transaction ? "PUT" : "POST",
           credentials: "include",

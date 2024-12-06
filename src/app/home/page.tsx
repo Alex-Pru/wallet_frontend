@@ -44,10 +44,13 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/wallets/", {
-          method: "GET",
-          credentials: "include",
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/wallets/`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (res.status === 403) {
           return router.push("/login?event=error");
@@ -145,24 +148,6 @@ export default function Home() {
                 {wallet.updated_at && (
                   <p> Editada em: {wallet.updated_at.split("T")[0]}</p>
                 )}
-                <div className={style.transactionButtons}>
-                  <button
-                    onClick={() =>
-                      console.log(`Adicionar gasto na carteira ${wallet.id}`)
-                    }
-                  >
-                    Adicionar Gasto
-                  </button>
-                  <button
-                    onClick={() =>
-                      console.log(
-                        `Adicionar recebimento na carteira ${wallet.id}`
-                      )
-                    }
-                  >
-                    Adicionar Recebimento
-                  </button>
-                </div>
                 {/* Botão de 3 pontos */}
                 <div className={style.threeDotsMenu}>
                   <button

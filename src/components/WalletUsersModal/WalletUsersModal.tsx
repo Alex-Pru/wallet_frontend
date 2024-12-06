@@ -31,7 +31,7 @@ const WalletUsersModal = ({
   const handleRoleChange = async (userId: number, role: string) => {
     try {
       const res = await fetch(
-        `http://localhost:4000/api/wallets/${walletId}/changeUser?id=${userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/wallets/${walletId}/changeUser?id=${userId}`,
         {
           method: "PUT",
           credentials: "include",
@@ -57,7 +57,7 @@ const WalletUsersModal = ({
   const handleRemoveUser = async (userId: number) => {
     try {
       const res = await fetch(
-        `http://localhost:4000/api/wallets/${walletId}/removeUser?id=${userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/wallets/${walletId}/removeUser?id=${userId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -88,12 +88,15 @@ const WalletUsersModal = ({
         email: newUserEmail,
         role: "viewer",
       };
-      const res = await fetch(`http://localhost:4000/api/wallets/${walletId}`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newUser: newUserObject }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/wallets/${walletId}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ newUser: newUserObject }),
+        }
+      );
 
       if (res.status === 403) {
         router.push("/login");

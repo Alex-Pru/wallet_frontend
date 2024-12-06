@@ -32,7 +32,7 @@ const WalletCategoriesModal = ({
   const handleCategoryUpdate = async (updatedCategory: Category) => {
     try {
       const res = await fetch(
-        `http://localhost:4000/api/transactions/updateCategory/${walletId}?categoryId=${updatedCategory.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/transactions/updateCategory/${walletId}?categoryId=${updatedCategory.id}`,
         {
           method: "PUT",
           credentials: "include",
@@ -98,7 +98,7 @@ const WalletCategoriesModal = ({
       };
 
       const res = await fetch(
-        `http://localhost:4000/api/transactions/category/${walletId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/transactions/category/${walletId}`,
         {
           method: "POST",
           credentials: "include",

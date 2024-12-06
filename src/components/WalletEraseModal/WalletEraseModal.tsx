@@ -31,7 +31,7 @@ const WalletEraseModal = ({
   const handleWalletExclusion = async () => {
     if (wallet) {
       const req = {
-        url: `http://localhost:4000/api/wallets/${wallet.id}`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/api/wallets/${wallet.id}`,
         method: "DELETE",
       };
 

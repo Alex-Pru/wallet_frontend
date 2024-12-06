@@ -33,12 +33,12 @@ const RemoveUserFromWalletModal = ({
 
   const handleUserRemovedFromWallet = async () => {
     let req = {
-      url: `http://localhost:4000/api/wallets/${wallet.id}/leaveWallet`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/api/wallets/${wallet.id}/leaveWallet`,
       method: "DELETE",
     };
 
     if (userToRemove) {
-      req.url += `http://localhost:4000/api/wallets/${wallet.id}/removeUser?id=${userToRemove.id}`;
+      req.url += `${process.env.NEXT_PUBLIC_API_URL}/api/wallets/${wallet.id}/removeUser?id=${userToRemove.id}`;
     }
 
     try {

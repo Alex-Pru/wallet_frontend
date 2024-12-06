@@ -23,10 +23,13 @@ export default function UserProfile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await fetch(`http://localhost:4000/api/user/profile`, {
-        credentials: "include",
-        method: "GET",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/profile`,
+        {
+          credentials: "include",
+          method: "GET",
+        }
+      );
 
       if (response.status === 403) {
         router.push("/login");
@@ -54,12 +57,15 @@ export default function UserProfile() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const response = await fetch(`http://localhost:4000/api/user/update`, {
-      credentials: "include",
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ updateFields: formData }),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user/update`,
+      {
+        credentials: "include",
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ updateFields: formData }),
+      }
+    );
 
     if (response.ok) {
       alert("Informações atualizadas com sucesso!");

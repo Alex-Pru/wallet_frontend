@@ -33,7 +33,7 @@ const TransactionExclusionModal = ({
   const handleTransactionExclusion = async () => {
     if (transaction) {
       const req = {
-        url: `http://localhost:4000/api/transactions/${walletId}?transactionId=${transaction.id}`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${walletId}?transactionId=${transaction.id}`,
         method: "DELETE",
       };
 

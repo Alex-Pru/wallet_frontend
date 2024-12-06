@@ -21,7 +21,7 @@ const WalletEraseModal = ({ title, isOpen, onClose }: ModalProps) => {
 
   const handleUserExclusion = async () => {
     const req = {
-      url: `http://localhost:4000/api/user/remove`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/api/user/remove`,
       method: "DELETE",
     };
 

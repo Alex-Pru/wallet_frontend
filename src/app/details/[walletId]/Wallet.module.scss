@@ -75,6 +75,10 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     .expenses {
       background: linear-gradient(45deg, rgba(255, 86, 86, 1), #bf0000);
     }
+
+    .balance {
+      background: linear-gradient(45deg, rgba(86, 200, 255, 1), #00aaff);
+    }
   }
 
   @media (max-width: 768px) {

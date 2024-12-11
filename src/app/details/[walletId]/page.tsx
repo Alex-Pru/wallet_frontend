@@ -209,6 +209,14 @@ const Wallets = () => {
     .filter((transaction) => transaction.type === "expense")
     .reduce((acc, transaction) => acc + parseFloat(transaction.amount), 0);
 
+  const currentBalance = transactions.reduce(
+    (acc, transaction) =>
+      transaction.type === "income"
+        ? acc + parseFloat(transaction.amount)
+        : acc - parseFloat(transaction.amount),
+    0
+  );
+
   return (
     <main className={styles.walletContainer}>
       <button className={styles.btnSidebar} onClick={toggleSidebar}>
@@ -225,6 +233,10 @@ const Wallets = () => {
             <p className={styles.expenses}>
               <i className="bi bi-arrow-down"></i>Gastos:{" "}
               {totalExpenses.toFixed(2)}
+            </p>
+            <p className={styles.balance}>
+              <i className="bi bi-cash"></i> Saldo:{" "}
+              {currentBalance ? currentBalance.toFixed(2) : "0,00"}
             </p>
           </div>
         </header>
